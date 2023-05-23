@@ -1,0 +1,5 @@
+https://towardsdatascience.com/7-nlp-techniques-you-can-easily-implement-with-python-dc0ade1a53c2#cb0b
+
+I will use the sentiment analysis to identify if the meesage s are positive,negative or neutral.
+Then use the named entity recognition to locate and classify the entities.
+Can also use stemming to put works like gyming, gym into the same category.
