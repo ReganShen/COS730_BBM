@@ -46,6 +46,24 @@ def runProgramTest():
     # Preprocess messages
     preprocessed_messages = [preprocess_text(message) for message in messages]
     print(preprocessed_messages)
-    
+    # Create dictionary representation of preprocessed messages
+    dictionary = corpora.Dictionary(preprocessed_messages)
 
+    # Create document-term matrix
+    doc_term_matrix = [dictionary.doc2bow(tokens) for tokens in preprocessed_messages]
+    num_topics = 3
+    # Create LDA model
+    lda_model = models.LdaModel(doc_term_matrix, num_topics=num_topics, id2word=dictionary, passes=10)
+
+    # Print topics and associated words
+    for topic_id, topic_words in lda_model.print_topics():
+        print(f"Topic #{topic_id + 1}: {topic_words}")
+
+    # Assign labels based on dominant topic
+    # for i in range(len(messages)):
+    #     bow = dictionary.doc2bow(preprocessed_messages[i])
+    #     dominant_topic = max(lda_model.get_document_topics(bow), key=lambda x: x[1])[0]
+    #     print(f"Message: {messages[i]}\nTopic: {dominant_topic + 1}\n")
+
+    #So if I apply first Model into a chat and then ask for topics reading all of the messages
 

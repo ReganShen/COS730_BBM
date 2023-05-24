@@ -6,6 +6,8 @@ https://towardsdatascience.com/end-to-end-topic-modeling-in-python-latent-dirich
 
 
 
-I will use the sentiment analysis to identify if the meesage s are positive,negative or neutral.
-Then use the named entity recognition to locate and classify the entities.
+I will use the sentiment analysis to identify if the meesage s are positive,negative or neutral. (Still I think This first)
+Then use the named entity recognition to locate and classify the entities. (Then we add the entity so not everything is scanned and taken in)
+
+
 Can also use stemming to put works like gyming, gym into the same category.
