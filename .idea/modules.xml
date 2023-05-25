@@ -2,7 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/COS730_BBM.iml" filepath="$PROJECT_DIR$/.idea/COS730_BBM.iml" />
+      <module fileurl="file://$PROJECT_DIR$/COS730_BBM.iml" filepath="$PROJECT_DIR$/COS730_BBM.iml" />
+      <module fileurl="file://$PROJECT_DIR$/android/COS730_BBM_android.iml" filepath="$PROJECT_DIR$/android/COS730_BBM_android.iml" />
     </modules>
   </component>
 </project>
