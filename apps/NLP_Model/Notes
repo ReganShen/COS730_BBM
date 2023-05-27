@@ -1,0 +1,13 @@
+https://towardsdatascience.com/7-nlp-techniques-you-can-easily-implement-with-python-dc0ade1a53c2#cb0b
+
+
+Actually we will use topic modeling
+https://towardsdatascience.com/end-to-end-topic-modeling-in-python-latent-dirichlet-allocation-lda-35ce4ed6b3e0
+
+
+
+I will use the sentiment analysis to identify if the meesage s are positive,negative or neutral. (Still I think This first)
+Then use the named entity recognition to locate and classify the entities. (Then we add the entity so not everything is scanned and taken in)
+
+
+Can also use stemming to put works like gyming, gym into the same category.
