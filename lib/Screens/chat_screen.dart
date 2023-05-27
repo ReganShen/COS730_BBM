@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 import 'package:COS730_BBM/Models/message.dart';
 
 class ChatScreen extends StatefulWidget {
@@ -13,6 +15,27 @@ class ChatScreen extends StatefulWidget {
 class _ChatScreenState extends State<ChatScreen> {
   List<Message> messages = [];
   TextEditingController _textEditingController = TextEditingController();
+
+  Future<void> sendMessage(Message message) async {
+    try {
+      final url = 'http://localhost:8000/send_message'; // Replace with your server's URL
+      final response = await http.post(
+        Uri.parse(url),
+        headers: {'Content-Type': 'application/json'},
+        body: {"Message" : message},
+      );
+      if (response.statusCode == 200) {
+        print('Message sent successfully!');
+        // Handle any further actions after successful message sending
+      } else {
+        print('Failed to send message. Error: ${response.statusCode}');
+        // Handle any error cases
+      }
+    } catch (e) {
+      print('Failed to send message. Exception: $e');
+      // Handle any exceptions
+    }
+  }
 
   void addMessage(Message message) {
     setState(() {
@@ -62,6 +85,7 @@ class _ChatScreenState extends State<ChatScreen> {
                       );
                       addMessage(newMessage);
                       _textEditingController.clear();
+                      sendMessage(newMessage); // Send the message via HTTP
                     }
                   },
                 ),
