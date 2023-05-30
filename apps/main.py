@@ -1,6 +1,37 @@
 from NLP_Model import firstModel
+from flask import Flask, request, jsonify
+import requests
+from flask_cors import CORS
+app = Flask(__name__)
+CORS(app)
 
-if __name__ == "__main__":
+@app.route('/send_message', methods=['POST'])
+def sendMessage():
+    rawTransactionData = request.get_json()
+    print(rawTransactionData)
+    data = {"Sender" : "Bob", "Message" : "Test message", "Reciever" : "You" }
+    dataJsonify = jsonify(data)  # This is used to return the Json back to the front end. so return the final value
+    return dataJsonify
+
+@app.route('/get_messages', methods=['POST'])
+def getMessage():
+    rawTransactionData = request.get_json()
+    print(rawTransactionData["conversation"])
+    data1 = {"Sender": "Bob", "Message": "Test message 1", "Reciever": "You"}
+    data2 = {"Sender": "You", "Message": "Test message 2", "Reciever": "Bob"}
+    data3 = {"Sender": "Bob", "Message": "Test message 3", "Reciever": "You"}
+    data4 = {"Sender": "You", "Message": "Test message 4", "Reciever": "Bob"}
+    data5 = {"Sender": "Bob", "Message": "Test message 5", "Reciever": "You"}
+    data6 = {"Sender": "You", "Message": "Test message 6", "Reciever": "Bob"}
+    data7 = {"Sender": "Bob", "Message": "Test message 7", "Reciever": "You"}
+    data8 = {"Sender": "You", "Message": "Test message 8", "Reciever": "Bob"}
+    list = [data1,data2,data3,data4,data5,data6,data7,data8]
+    dataJsonify = jsonify(list)  # This is used to return the Json back to the front end. so return the final value
+
+    return dataJsonify
+
+
+def runAI():
     messages = [
         "Hey! How's it going?",
         "Hi! I'm doing great, thanks for asking. How about you?",
@@ -18,7 +49,7 @@ if __name__ == "__main__":
         "Yum! I'm getting hungry just thinking about it. Any chance you can share the recipe?",
         "Of course! I'll send it to you later. I'm sure you'll enjoy it. So, what's your favorite type of cuisine?",
         "I'm a big fan of Mexican food. Tacos and guacamole are my weaknesses.",
-        "Same here! Mexican cuisine is so flavorful. We should plan a taco night sometime.",
+        "Same here! sMexican cuisine is so flavorful. We should plan a taco night sometime.",
         "That's a great idea! I'll bring the guacamole. Let's make it happen next week.",
         "Perfect! Looking forward to it. Oh, by the way, did you catch the latest sports game?",
         "Unfortunately, I missed it. Who won? Fill me in on the highlights.",
@@ -37,6 +68,9 @@ if __name__ == "__main__":
         "Trust me, you won't be disappointed. Christopher Nolan's direction is brilliant. Let's discuss it once you've seen it.",
         "Deal! Looking forward to it. Well, I should get going now. Have a fantastic evening!",
         "You too! Enjoy the movie and have a wonderful time. Catch up with you later!",
-        "Thanks! Talk to you soon. Take care and bye for now!"    ]
+        "Thanks! Talk to you soon. Take care and bye for now!"]
 
     firstModel.runProgramTest(messages)
+
+if __name__ == "__main__":
+    app.run(debug=True, port=8000)
