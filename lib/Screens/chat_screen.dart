@@ -38,7 +38,7 @@ class _ChatScreenState extends State<ChatScreen> {
           final message = Message(
             sender: md["Sender"],
             text: md["Message"],
-            reciever: md["Reciever"],
+            reciever: md["Receiver"]
           );
           previousMessages.add(message);
         }
