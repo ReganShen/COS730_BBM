@@ -34,12 +34,11 @@ class _ChatScreenState extends State<ChatScreen> {
       if (response.statusCode == 200) {
         final jsonResponse = jsonDecode(response.body);
         final List<Message> previousMessages = [];
-        for (var md in jsonResponse) {      
+        for (var md in jsonResponse) {
           final message = Message(
-            sender: md["Sender"],
-            text: md["Message"],
-            reciever: md["Receiver"]
-          );
+              sender: md["Sender"],
+              text: md["Message"],
+              reciever: md["Receiver"]);
           previousMessages.add(message);
         }
         setState(() {
