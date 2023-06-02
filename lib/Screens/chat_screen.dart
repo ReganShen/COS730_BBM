@@ -5,8 +5,9 @@ import 'package:COS730_BBM/Models/message.dart';
 
 class ChatScreen extends StatefulWidget {
   final String conversation;
+  final String displayImage;
 
-  ChatScreen({required this.conversation});
+  ChatScreen({required this.conversation, required this.displayImage});
 
   @override
   _ChatScreenState createState() => _ChatScreenState();
@@ -25,8 +26,8 @@ class _ChatScreenState extends State<ChatScreen> {
   Future<void> fetchPreviousMessages() async {
     try {
       final url =
-        //  'http://127.0.0.1:8000/get_messages'; // For chrome
-        'http://10.0.2.2:8000/get_messages'; //For android emulator
+          //  'http://127.0.0.1:8000/get_messages'; // For chrome
+          'http://10.0.2.2:8000/get_messages'; //For android emulator
       final response = await http.post(
         Uri.parse(url),
         headers: {'Content-Type': 'application/json'},
@@ -62,9 +63,9 @@ class _ChatScreenState extends State<ChatScreen> {
         "Message": message.text,
         "Reciever": message.reciever
       });
-      final url =          
+      final url =
           //'http://127.0.0.1:8000/send_message'; // For chrome
-        'http://10.0.2.2:8000/send_message'; //For android emulator
+          'http://10.0.2.2:8000/send_message'; //For android emulator
       final response = await http.post(
         Uri.parse(url),
         headers: {'Content-Type': 'application/json'},
@@ -96,12 +97,28 @@ class _ChatScreenState extends State<ChatScreen> {
       messages.add(message);
     });
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.conversation),
+        title: Row(
+          children: [
+            Container(
+              width: 50,
+              height: 50,
+              decoration: BoxDecoration(
+                shape: BoxShape.rectangle, // Set the shape to rectangle
+                image: DecorationImage(
+                  image: AssetImage(widget.displayImage), // Display the image
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+            SizedBox(width: 30),
+            Text(widget
+                .conversation), // Display the conversation as the app bar title
+          ],
+        ),
       ),
       body: Column(
         children: [
@@ -115,19 +132,44 @@ class _ChatScreenState extends State<ChatScreen> {
                     alignment: message.sender == 'You'
                         ? Alignment.centerRight
                         : Alignment.centerLeft,
-                    child: Container(
-                      padding: EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(12),
-                        color:
-                            message.sender == 'You' ? Colors.blue : Colors.grey,
-                      ),
-                      child: Text(
-                        message.text,
-                        style: TextStyle(
-                          color: Colors.white,
+                    child: Stack(
+                      children: [
+                        Container(
+                          padding: EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12),
+                            color: message.sender == 'You'
+                                ? Colors.blue
+                                : Colors.grey,
+                          ),
+                          child: Text(
+                            message.text + "   ",
+                            style: TextStyle(
+                              color: Colors.white,
+                            ),
+                          ),
                         ),
-                      ),
+                        if (message.sender == 'You')
+                          Positioned(
+                            bottom: 0,
+                            right: 0,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: Colors.blue,
+                                borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(10),
+                                ),
+                              ),
+                              width: 20,
+                              height: 20,
+                              child: Icon(
+                                Icons.check,
+                                color: Colors.white,
+                                size: 14,
+                              ),
+                            ),
+                          ),
+                      ],
                     ),
                   ),
                 );
@@ -152,9 +194,10 @@ class _ChatScreenState extends State<ChatScreen> {
                     final text = _textEditingController.text;
                     if (text.isNotEmpty) {
                       final newMessage = Message(
-                          sender: 'You',
-                          text: text,
-                          reciever: widget.conversation);
+                        sender: 'You',
+                        text: text,
+                        reciever: widget.conversation,
+                      );
                       addMessage(newMessage);
                       _textEditingController.clear();
                       sendMessage(newMessage); // Send the message via HTTP
