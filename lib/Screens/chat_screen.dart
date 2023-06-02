@@ -25,7 +25,8 @@ class _ChatScreenState extends State<ChatScreen> {
   Future<void> fetchPreviousMessages() async {
     try {
       final url =
-          'http://127.0.0.1:8000/get_messages'; // Replace with your server's URL
+        //  'http://127.0.0.1:8000/get_messages'; // For chrome
+        'http://10.0.2.2:8000/get_messages'; //For android emulator
       final response = await http.post(
         Uri.parse(url),
         headers: {'Content-Type': 'application/json'},
@@ -34,12 +35,11 @@ class _ChatScreenState extends State<ChatScreen> {
       if (response.statusCode == 200) {
         final jsonResponse = jsonDecode(response.body);
         final List<Message> previousMessages = [];
-        for (var md in jsonResponse) {      
+        for (var md in jsonResponse) {
           final message = Message(
-            sender: md["Sender"],
-            text: md["Message"],
-            reciever: md["Receiver"]
-          );
+              sender: md["Sender"],
+              text: md["Message"],
+              reciever: md["Receiver"]);
           previousMessages.add(message);
         }
         setState(() {
@@ -62,8 +62,9 @@ class _ChatScreenState extends State<ChatScreen> {
         "Message": message.text,
         "Reciever": message.reciever
       });
-      final url =
-          'http://127.0.0.1:8000/send_message'; // Replace with your server's URL
+      final url =          
+          //'http://127.0.0.1:8000/send_message'; // For chrome
+        'http://10.0.2.2:8000/send_message'; //For android emulator
       final response = await http.post(
         Uri.parse(url),
         headers: {'Content-Type': 'application/json'},
