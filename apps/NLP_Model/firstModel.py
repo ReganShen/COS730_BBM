@@ -87,26 +87,24 @@ def mainFunctionTorun(messages):
     topics = runProgramTest(messages)
     trainedopics = trainedTopics.trainedTopics()
     finalTopics = {}
+    toReturn = []
     for topic in topics:
         print("New Topic Bitchj")
-        # ls = []
-        # for wo in topics[topic]:
-        #     #The string is wo[1]
-        #     ls.append(wo[1])
+        ls = []
+        for wo in topics[topic]:
+            #The string is wo[1]
+            ls.append(wo[1])
         t = topics[topic]
         deepCopy = t.copy()
         finalllle = trainedopics.classifierIfExist(deepCopy)
         if finalllle == "":
-            finalTopics[topic] = topics[topic]
+            blob = {"None" : ls}
+            toReturn.append(blob)
         else:
-            strsadssd = finalllle + str(topic)
-            finalTopics[strsadssd] = topics[topic]
-    for s in finalTopics:
-        st = finalTopics[s]
-        print(s)
-        print("====================")
-        print(st)
-
+            blob = {finalllle: ls}
+            toReturn.append(blob)
+    print(toReturn)
+    return toReturn
 
 def runProgramTest(messages):
 
