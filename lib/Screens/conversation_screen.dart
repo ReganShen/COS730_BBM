@@ -11,7 +11,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
     'John',
     'Jane',
     'Alex',
-    'Sarah',
+    'Bob',
   ];
 
   @override
