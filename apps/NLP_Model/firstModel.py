@@ -89,7 +89,6 @@ def mainFunctionTorun(messages):
     finalTopics = {}
     toReturn = []
     for topic in topics:
-        print("New Topic Bitchj")
         ls = []
         for wo in topics[topic]:
             #The string is wo[1]

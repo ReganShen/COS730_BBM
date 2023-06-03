@@ -5,8 +5,9 @@ import 'package:COS730_BBM/Models/message.dart';
 
 class ChatScreen extends StatefulWidget {
   final String conversation;
+  final String displayImage;
 
-  ChatScreen({required this.conversation});
+  ChatScreen({required this.conversation, required this.displayImage});
 
   @override
   _ChatScreenState createState() => _ChatScreenState();
@@ -24,9 +25,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
   Future<void> fetchPreviousMessages() async {
     try {
-      final url =
-        //  'http://127.0.0.1:8000/get_messages'; // For chrome
-        'http://10.0.2.2:8000/get_messages'; //For android emulator
+      final url = 'http://10.0.2.2:8000/get_messages'; //For android emulator
       final response = await http.post(
         Uri.parse(url),
         headers: {'Content-Type': 'application/json'},
@@ -34,12 +33,14 @@ class _ChatScreenState extends State<ChatScreen> {
       );
       if (response.statusCode == 200) {
         final jsonResponse = jsonDecode(response.body);
+        
         final List<Message> previousMessages = [];
         for (var md in jsonResponse) {
           final message = Message(
-              sender: md["Sender"],
-              text: md["Message"],
-              reciever: md["Receiver"]);
+            sender: md["Sender"],
+            text: md["Message"],
+            receiver: md["Receiver"],
+          );
           previousMessages.add(message);
         }
         setState(() {
@@ -60,11 +61,9 @@ class _ChatScreenState extends State<ChatScreen> {
       final msg = jsonEncode({
         "Sender": message.sender,
         "Message": message.text,
-        "Reciever": message.reciever
+        "Receiver": message.receiver,
       });
-      final url =          
-          //'http://127.0.0.1:8000/send_message'; // For chrome
-        'http://10.0.2.2:8000/send_message'; //For android emulator
+      final url = 'http://10.0.2.2:8000/send_message'; //For android emulator
       final response = await http.post(
         Uri.parse(url),
         headers: {'Content-Type': 'application/json'},
@@ -76,7 +75,7 @@ class _ChatScreenState extends State<ChatScreen> {
         final newMessage = Message(
           sender: jsonResponse["Sender"],
           text: jsonResponse["Message"],
-          reciever: jsonResponse["Reciever"],
+          receiver: jsonResponse["Receiver"],
         );
         addMessage(newMessage);
         print(jsonResponse);
@@ -97,11 +96,61 @@ class _ChatScreenState extends State<ChatScreen> {
     });
   }
 
+  Future<void> translateMessage(Message message) async {
+    
+    try {
+      final url = 'http://10.0.2.2:8000/translate'; //For android emulator
+      final response = await http.post(
+        Uri.parse(url),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({"Name": widget.conversation}),
+      );
+      if (response.statusCode == 200) {
+        final jsonResponse = jsonDecode(response.body);
+        
+        final List<Message> previousMessages = [];
+        for (var md in jsonResponse) {
+          final message = Message(
+            sender: md["Sender"],
+            text: md["Message"],
+            receiver: md["Receiver"],
+          );
+          previousMessages.add(message);
+        }
+        setState(() {
+          messages = previousMessages;
+        });
+        print('Fetched previous messages successfully!');
+      } else {
+        print(
+            'Failed to fetch previous messages. Error: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Failed to fetch previous messages. Exception: $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.conversation),
+        title: Row(
+          children: [
+            Container(
+              width: 50,
+              height: 50,
+              decoration: BoxDecoration(
+                shape: BoxShape.rectangle,
+                image: DecorationImage(
+                  image: AssetImage(widget.displayImage),
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+            SizedBox(width: 30),
+            Text(widget.conversation),
+          ],
+        ),
       ),
       body: Column(
         children: [
@@ -110,26 +159,69 @@ class _ChatScreenState extends State<ChatScreen> {
               itemCount: messages.length,
               itemBuilder: (context, index) {
                 final message = messages[index];
+                final bool shouldTranslate = message.text.endsWith("|~|");
+                final String displayText = shouldTranslate
+                    ? message.text.substring(0, message.text.length - 3)
+                    : message.text;
+
                 return ListTile(
                   title: Align(
                     alignment: message.sender == 'You'
                         ? Alignment.centerRight
                         : Alignment.centerLeft,
-                    child: Container(
-                      padding: EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(12),
-                        color:
-                            message.sender == 'You' ? Colors.blue : Colors.grey,
-                      ),
-                      child: Text(
-                        message.text,
-                        style: TextStyle(
-                          color: Colors.white,
+                    child: Stack(
+                      children: [
+                        Container(
+                          padding: EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12),
+                            color: message.sender == 'You'
+                                ? Colors.blue
+                                : Colors.grey,
+                          ),
+                          child: Text(
+                            displayText + "   ",
+                            style: TextStyle(
+                              color: Colors.white,
+                            ),
+                          ),
                         ),
-                      ),
+                        if (message.sender == 'You')
+                          Positioned(
+                            bottom: 0,
+                            right: 0,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: Colors.blue,
+                                borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(10),
+                                ),
+                              ),
+                              width: 20,
+                              height: 20,
+                              child: Icon(
+                                Icons.check,
+                                color: Colors.white,
+                                size: 14,
+                              ),
+                            ),
+                          ),
+                      ],
                     ),
                   ),
+                  subtitle: shouldTranslate
+                      ? Row(
+                          children: [
+                            IconButton(
+                              icon: Icon(Icons.translate),
+                              color: Colors.blue,
+                              onPressed: () {
+                                translateMessage(message);
+                              },
+                            ),
+                          ],
+                        )
+                      : null,
                 );
               },
             ),
@@ -152,12 +244,13 @@ class _ChatScreenState extends State<ChatScreen> {
                     final text = _textEditingController.text;
                     if (text.isNotEmpty) {
                       final newMessage = Message(
-                          sender: 'You',
-                          text: text,
-                          reciever: widget.conversation);
+                        sender: 'You',
+                        text: text,
+                        receiver: widget.conversation,
+                      );
                       addMessage(newMessage);
                       _textEditingController.clear();
-                      sendMessage(newMessage); // Send the message via HTTP
+                      sendMessage(newMessage);
                     }
                   },
                 ),
