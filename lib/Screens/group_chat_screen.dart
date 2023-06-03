@@ -72,7 +72,7 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('$confirmedTopic'),
+          title: Text('Our AI picked up : $confirmedTopic'),
           content: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
@@ -98,40 +98,8 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
           ],
         );
       },
-    );
+    );    
   }
-
-
-
-
-
-
-
-
-  // Future<bool?> showConfirmationDialog(BuildContext context, String confirmedTopic) async {
-  //   return showDialog<bool>(
-  //     context: context,
-  //     builder: (BuildContext context) {
-  //       return AlertDialog(
-  //         title: Text('Our AI has picked up that you might have a interest in $confirmedTopic, would you be interested in joinig a group chat with people who also have a interest in $confirmedTopic?'),
-  //         actions: [
-  //           TextButton(
-  //             onPressed: () {
-  //               Navigator.pop(context, true); // User confirmed interest
-  //             },
-  //             child: Text('Yes'),
-  //           ),
-  //           TextButton(
-  //             onPressed: () {
-  //               Navigator.pop(context, false); // User declined interest
-  //             },
-  //             child: Text('No'),
-  //           ),
-  //         ],
-  //       );
-  //     },
-  //   );
-  // }
 
   void showSelectionPopup(BuildContext context) {
     showDialog(
