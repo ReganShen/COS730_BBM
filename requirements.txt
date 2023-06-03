@@ -4,3 +4,8 @@ spacy~=3.5.3
 gensim~=4.3.1
 yake~=0.4.8
 pandas~=1.5.3
+translate~=3.6.1
+googletrans~=3.1.0a0
+rake-nltk~=1.0.6
+Flask-Cors~=3.0.10
+https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.5.0/en_core_web_sm-3.5.0.tar.gz
