@@ -230,7 +230,7 @@ class TestTrainedTopics(unittest.TestCase):
     def tearDown(self):
         pass
 
-    
+
     def test_writeToJSON(self):
         with patch('builtins.open', create=True) as mock_open:
             self.topics.writeToJSON()
