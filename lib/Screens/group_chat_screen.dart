@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:COS730_BBM/Screens/groupchat_chat_screen';
 
 class GroupChatScreen extends StatefulWidget {
   @override
@@ -192,7 +193,12 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
                 return ListTile(
                   title: Text(groupName),
                   onTap: () {
-                    // Handle group chat selection
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => groupchat_ChatScreen(topic: groupName),
+                      ),
+                    );
                   },
                 );
               },

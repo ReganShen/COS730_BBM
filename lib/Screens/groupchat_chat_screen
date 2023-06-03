@@ -1,0 +1,252 @@
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:COS730_BBM/Models/message.dart';
+import 'dart:math';
+
+class groupchat_ChatScreen extends StatefulWidget {
+  final String topic;
+
+  groupchat_ChatScreen({required this.topic});
+
+  @override
+  _groupchat_ChatScreenState createState() => _groupchat_ChatScreenState();
+}
+
+class _groupchat_ChatScreenState extends State<groupchat_ChatScreen> {
+  List<Message> messages = [];
+  Map<String, Color> senderColors = {}; // Map to store sender colors
+  TextEditingController _textEditingController = TextEditingController();
+  String description = ''; // Variable to store description
+
+  @override
+  void initState() {
+    super.initState();
+    fetchPreviousMessages();
+  }
+
+  Future<void> fetchPreviousMessages() async {
+    try {
+      final url = 'http://10.0.2.2:8000/groupChat'; //For android emulator
+      final response = await http.post(
+        Uri.parse(url),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({"Topic": widget.topic}),
+      );
+      if (response.statusCode == 200) {
+        final jsonResponse = jsonDecode(response.body);
+
+        final List<Message> previousMessages = [];
+        description = jsonResponse["Decsription"];
+        final tempMes = jsonResponse["Messages"];
+        for (var md in tempMes) {
+          final message = Message(
+            sender: md["Sender"],
+            text: md["Message"],
+            receiver: "IDK",
+          );
+          previousMessages.add(message);
+        }
+        setState(() {
+          messages = previousMessages;
+        });
+        print('Fetched previous messages successfully!');
+      } else {
+        print(
+            'Failed to fetch previous messages. Error: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Failed to fetch previous messages. Exception: $e');
+    }
+  }
+
+  Future<void> sendGroupMessage(String message) async {
+    try {
+      final msg = jsonEncode({
+        "Topic": widget.topic,
+        "Message": message,
+      });
+      final url = 'http://10.0.2.2:8000/groupChatSendMessage'; //For android emulator
+      final response = await http.post(
+        Uri.parse(url),
+        headers: {'Content-Type': 'application/json'},
+        body: msg,
+      );
+      if (response.statusCode == 200) {
+        print('Message sent successfully!');
+        final jsonResponse = jsonDecode(response.body);
+        final newMessage = Message(
+          sender: jsonResponse["Sender"],
+          text: jsonResponse["Message"],
+          receiver: jsonResponse["Receiver"],
+        );
+        addMessage(newMessage);
+        print(jsonResponse);
+        // Handle any further actions after successful message sending
+      } else {
+        print('Failed to send message. Error: ${response.statusCode}');
+        // Handle any error cases
+      }
+    } catch (e) {
+      print('Failed to send message. Exception: $e');
+      // Handle any exceptions
+    }
+  }
+
+  void addMessage(Message message) {
+    setState(() {
+      messages.add(message);
+    });
+  }
+
+  Color getRandomColor() {
+    Random random = Random();
+    int r = random.nextInt(256);
+    int g = random.nextInt(256);
+    int b = random.nextInt(256);
+    return Color.fromARGB(255, r, g, b);
+  }
+
+  Color getSenderColor(String sender) {
+    if (senderColors.containsKey(sender)) {
+      return senderColors[sender]!;
+    } else {
+      Color color = getRandomColor();
+      senderColors[sender] = color;
+      return color;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        toolbarHeight: 80, // Increase the toolbar height to your desired value
+        backgroundColor: Color.fromARGB(255, 196, 196, 196),
+        centerTitle: true,
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              widget.topic,
+              style: TextStyle(fontSize: 24),
+            ),
+            Text(
+              description,
+              style: TextStyle(fontSize: 16),
+            ),
+          ],
+        ),
+      ),
+      body: Column(
+        children: [
+          Expanded(
+            child: ListView.builder(
+              itemCount: messages.length,
+              itemBuilder: (context, index) {
+                final message = messages[index];
+                final bool shouldTranslate = message.text.endsWith("|~|");
+                final String displayText = shouldTranslate
+                    ? message.text.substring(0, message.text.length - 3)
+                    : message.text;
+
+                final bool isYou = message.sender == 'You';
+                final Color containerColor =
+                    isYou ? Colors.blue : getSenderColor(message.sender);
+
+                return ListTile(
+                  title: Align(
+                    alignment:
+                        isYou ? Alignment.centerRight : Alignment.centerLeft,
+                    child: Stack(
+                      children: [
+                        Container(
+                          padding: EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12),
+                            color: containerColor,
+                          ),
+                          child: Text(
+                            displayText + "   ",
+                            style: TextStyle(
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                        if (isYou)
+                          Positioned(
+                            bottom: 0,
+                            right: 0,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: Colors.blue,
+                                borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(10),
+                                ),
+                              ),
+                              width: 20,
+                              height: 20,
+                              child: Icon(
+                                Icons.check,
+                                color: Colors.white,
+                                size: 14,
+                              ),
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
+                  subtitle: shouldTranslate
+                      ? Row(
+                          children: [
+                            IconButton(
+                              icon: Icon(Icons.translate),
+                              color: Colors.blue,
+                              onPressed: () {
+                                //
+                              },
+                            ),
+                          ],
+                        )
+                      : null,
+                );
+              },
+            ),
+          ),
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 8),
+            child: Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: _textEditingController,
+                    decoration: InputDecoration(
+                      hintText: 'Type a message...',
+                    ),
+                  ),
+                ),
+                IconButton(
+                  icon: Icon(Icons.send),
+                  onPressed: () {
+                    final text = _textEditingController.text;
+                    if (text.isNotEmpty) {
+                      final newMessage = Message(
+                        sender: 'You',
+                        text: text,
+                        receiver: "IDK",
+                      );
+                      addMessage(newMessage);
+                      _textEditingController.clear();
+                      sendGroupMessage(text);
+                    }
+                  },
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+

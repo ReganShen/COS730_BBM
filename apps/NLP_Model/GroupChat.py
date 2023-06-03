@@ -5,12 +5,12 @@ class groupChat():
     def __init__(self, topic):
         self.topic = topic
 
-    def addMessage(self,message):
+    def addMessage(self,person,message):
         luist = self.readFromJSON()
         if self.topic in luist:
             t = luist[self.topic]
             messages = t["Messages"]
-            temp = {"Sender":  "You", "Message": message}
+            temp = {"Sender":  person, "Message": message}
             messages.append(temp)
             t["Messages"] = messages
         self.writeToJSON(luist)
