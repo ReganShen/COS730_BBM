@@ -31,4 +31,15 @@ About: My name is Regan Shen. I was born on December 1st 2001 in westville, Durb
 
 ## Acknowledgments
 
-Libaries Used
+<b> Libaries Used: </b> 
+Flask
+nltk
+spacy
+gensim
+yake
+pandas
+translate
+googletrans
+rake-nltk
+Flask-Cors
+en_core_web_sm
