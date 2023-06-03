@@ -1,0 +1,36 @@
+name: Flutter CI
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+    branches:
+      - main
+      - develop
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '2.5.0'  # Set the desired Flutter version
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Build for Android
+        run: flutter build apk
+
+      - name: Build for iOS
+        run: flutter build ios --no-codesign
+
+      - name: Run tests
+        run: flutter test
