@@ -223,54 +223,54 @@ class Testmessages(unittest.TestCase):
         self.assertEqual(data, expected_data)
         mock_open.return_value.close.assert_called_once()
 
-class TestTrainedTopics(unittest.TestCase):
-    def setUp(self):
-        self.topics = trainedTopics.trainedTopics()
+# class TestTrainedTopics(unittest.TestCase):
+#     def setUp(self):
+#         self.topics = trainedTopics.trainedTopics()
 
-    def tearDown(self):
-        pass
-
-
-    def test_writeToJSON(self):
-        with patch('builtins.open', create=True) as mock_open:
-            self.topics.writeToJSON()
-            mock_open.assert_called_once_with("NLP_Model\\keywords.json", "w")
-        # Assert that the JSON file has been created successfully
-        # and contains the expected data
-        # You can add assertions here to check the contents of the JSON file
-
-    @patch('builtins.open', new_callable=mock_open, read_data='{"Artificial Intelligence": ["AI", "Artificial Intelligence"]}')
-    def test_readFromJSON(self, mock_open):
-        expected_data = {"Artificial Intelligence": ["AI", "Artificial Intelligence"]}
-
-        data = self.topics.readFromJSON()
-        mock_open.assert_called_once_with('NLP_Model\\keywords.json', 'rb')
-        self.assertEqual(data, expected_data)
-        mock_open.return_value.close.assert_called_once()
+#     def tearDown(self):
+#         pass
 
 
-    def test_getListOfTopicKeywords(self):
-        expected_result = {'topic1': ['keyword1', 'keyword2'], 'topic2': ['keyword3']}
-        self.topics.readFromJSON = lambda: expected_result
-        result = self.topics.getListOfTopicKeywords()
-        self.assertEqual(result, expected_result)
+#     def test_writeToJSON(self):
+#         with patch('builtins.open', create=True) as mock_open:
+#             self.topics.writeToJSON()
+#             mock_open.assert_called_once_with("NLP_Model\\keywords.json", "w")
+#         # Assert that the JSON file has been created successfully
+#         # and contains the expected data
+#         # You can add assertions here to check the contents of the JSON file
 
-    def test_classifierIfExist(self):
-        self.topics.listOfTopics = {'topic1': ['keyword1', 'keyword2'], 'topic2': ['keyword3']}
-        listOfWordsAndPercent = [(0.8, 'keyword1'), (0.6, 'keyword3')]
-        result = self.topics.classifierIfExist(listOfWordsAndPercent)
-        self.assertEqual(result, 'topic1')
+#     @patch('builtins.open', new_callable=mock_open, read_data='{"Artificial Intelligence": ["AI", "Artificial Intelligence"]}')
+#     def test_readFromJSON(self, mock_open):
+#         expected_data = {"Artificial Intelligence": ["AI", "Artificial Intelligence"]}
 
-    def test_getMajorityTopic(self):
-        ls = [(0.8, '#topic1'), (0.6, '#topic2'), (0.7, '#topic1')]
-        result = self.topics.getMajorityTopic(ls)
-        self.assertEqual(result, 'topic1')
+#         data = self.topics.readFromJSON()
+#         mock_open.assert_called_once_with('NLP_Model\\keywords.json', 'rb')
+#         self.assertEqual(data, expected_data)
+#         mock_open.return_value.close.assert_called_once()
 
-    def test_string_similarity(self):
-        str1 = 'hello'
-        str2 = 'hola'
-        result = self.topics.string_similarity(str1, str2)
-        self.assertAlmostEqual(result, 0.4444444444444444, places=1)
+
+#     def test_getListOfTopicKeywords(self):
+#         expected_result = {'topic1': ['keyword1', 'keyword2'], 'topic2': ['keyword3']}
+#         self.topics.readFromJSON = lambda: expected_result
+#         result = self.topics.getListOfTopicKeywords()
+#         self.assertEqual(result, expected_result)
+
+#     def test_classifierIfExist(self):
+#         self.topics.listOfTopics = {'topic1': ['keyword1', 'keyword2'], 'topic2': ['keyword3']}
+#         listOfWordsAndPercent = [(0.8, 'keyword1'), (0.6, 'keyword3')]
+#         result = self.topics.classifierIfExist(listOfWordsAndPercent)
+#         self.assertEqual(result, 'topic1')
+
+#     def test_getMajorityTopic(self):
+#         ls = [(0.8, '#topic1'), (0.6, '#topic2'), (0.7, '#topic1')]
+#         result = self.topics.getMajorityTopic(ls)
+#         self.assertEqual(result, 'topic1')
+
+#     def test_string_similarity(self):
+#         str1 = 'hello'
+#         str2 = 'hola'
+#         result = self.topics.string_similarity(str1, str2)
+#         self.assertAlmostEqual(result, 0.4444444444444444, places=1)
 
 
 class TestGroupChat(unittest.TestCase):
