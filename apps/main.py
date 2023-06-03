@@ -3,6 +3,7 @@ from flask import Flask, request, jsonify
 import messages
 from flask_cors import CORS
 from Translator import translator
+from NLP_Model import GroupChat
 app = Flask(__name__)
 CORS(app)
 
@@ -57,6 +58,26 @@ def tra():
     return dataJsonify
 
 
+@app.route('/groupChat', methods=['POST'])
+def groupChat():
+    rawTransactionData = request.get_json()
+    topic = rawTransactionData["Topic"]
+    gp = GroupChat.groupChat(topic)
+    detsAndKak = gp.retrievedetailsAndCheckExist()
+    dataJsonify = jsonify(detsAndKak)
+    return dataJsonify
+
+@app.route('/groupChatSendMessage', methods=['POST'])
+def groupChatSendMessage():
+    rawTransactionData = request.get_json()
+    topic = rawTransactionData["Topic"]
+    message = rawTransactionData["Message"]
+    gp = GroupChat.groupChat(topic)
+    gp.addMessage(message)
+    detsAndKak = gp.retrievedetailsAndCheckExist()
+    dataJsonify = jsonify(detsAndKak)
+    return dataJsonify
+
 def checkIfNeedingTranslationForFront(list):
     #So first identify messages if it is not english then attach some shit to the user name or something to work on the front end side
     for message in list:
@@ -80,9 +101,6 @@ def MockConversationNow(person):
     messages.storeMessagesRecieved(data)
     temp = checkIfNeedingTranslationForFront([data])
     return temp[0]
-
-
-
 
 def runAI(name):
     message = []
