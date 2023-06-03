@@ -6,3 +6,4 @@ yake~=0.4.8
 pandas~=1.5.3
 translate~=3.6.1
 googletrans~=3.1.0a0
+rake-nltk~=1.0.6
