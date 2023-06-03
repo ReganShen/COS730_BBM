@@ -73,9 +73,13 @@ def groupChatSendMessage():
     topic = rawTransactionData["Topic"]
     message = rawTransactionData["Message"]
     gp = GroupChat.groupChat(topic)
-    gp.addMessage(message)
-    detsAndKak = gp.retrievedetailsAndCheckExist()
-    dataJsonify = jsonify(detsAndKak)
+    gp.addMessage("You",message)
+    data = {}
+    data["Sender"] = "Fred"
+    data["Message"] = "Howzit Juan, welcome. Excited to have you joining us"
+    data["Receiver"] = "you"
+    gp.addMessage(data["Sender"], data["Message"])
+    dataJsonify = jsonify(data)
     return dataJsonify
 
 def checkIfNeedingTranslationForFront(list):
