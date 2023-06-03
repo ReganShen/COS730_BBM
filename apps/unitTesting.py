@@ -3,7 +3,7 @@ from unittest import mock
 import messages
 from unittest.mock import mock_open, patch
 import os
-from NLP_Model import firstModel,GroupChat, trainedTopics
+from NLP_Model import firstModel,GroupChat
 import NLP_Model.trainedTopics as trainedTopics
 import json
 import main
@@ -230,21 +230,23 @@ class TestTrainedTopics(unittest.TestCase):
     def tearDown(self):
         pass
 
+    
     def test_writeToJSON(self):
-        self.topics.writeToJSON()
+        with patch('builtins.open', create=True) as mock_open:
+            self.topics.writeToJSON()
+            mock_open.assert_called_once_with("NLP_Model\\keywords.json", "w")
         # Assert that the JSON file has been created successfully
         # and contains the expected data
         # You can add assertions here to check the contents of the JSON file
 
-    def test_readFromJSON(self):
-        # Write some data to the JSON file first
-        self.topics.writeToJSON()
+    @patch('builtins.open', new_callable=mock_open, read_data='{"Artificial Intelligence": ["AI", "Artificial Intelligence"]}')
+    def test_readFromJSON(self, mock_open):
+        expected_data = {"Artificial Intelligence": ["AI", "Artificial Intelligence"]}
 
-        # Read the data from the JSON file
-        topic_list = self.topics.readFromJSON()
-
-        # Assert that the returned list matches the expected list
-        # You can add assertions here to check the contents of the list
+        data = self.topics.readFromJSON()
+        mock_open.assert_called_once_with('NLP_Model\\keywords.json', 'rb')
+        self.assertEqual(data, expected_data)
+        mock_open.return_value.close.assert_called_once()
 
 
     def test_getListOfTopicKeywords(self):
