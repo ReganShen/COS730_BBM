@@ -24,7 +24,7 @@ matically translate between languages
 ## Authors
 
 <b> Regan Shen (u20460067): </b> <br>
-About: My name is Regan Shen. I was born on December 1st 2001 in westville, Durban. I am currently in my 3rd year, studying Bsc Computer Science at the University of Pretoria. I really enjoy spending time with my friends and attending social events. I have an interest in Software Development and more focused on the backend. <br>
+About: My name is Regan Shen. I was born on December 1st 2001 in westville, Durban. I am currently in my 4th year, studying HonBsc Computer Science at the University of Pretoria. I really enjoy spending time with my friends and attending social events. I have an interest in Software Development and more focused on the backend. <br>
 [![Linkedin-Logo1](https://user-images.githubusercontent.com/93085916/197403271-3c6e07ef-64a9-456e-986d-004399535a3b.png)](https://www.linkedin.com/in/regan-shen-b8a73b23a/)[![GitHub1](https://user-images.githubusercontent.com/93085916/197403661-72316ed5-241e-4664-95ad-4c099f8f50b3.png)](https://github.com/ReganShen)
 
 ![regan1](https://user-images.githubusercontent.com/93085916/197404270-bd73d0a7-46c2-4502-bf14-f188f5e707a2.jpg)
