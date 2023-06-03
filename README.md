@@ -21,8 +21,6 @@ tion between people who don’t speak the same language. This component will
 once again use AI to identify the language of the other participant and auto-
 matically translate between languages
 
-```
-
 ## Authors
 
 Contributors names and contact info
