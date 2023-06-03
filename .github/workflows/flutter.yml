@@ -4,11 +4,12 @@ on:
   push:
     branches:
       - main
-      - develop
+      - Translator
+      - NLP-model
+      - System_Front-Back-end
   pull_request:
     branches:
-      - main
-      - develop
+      - main     
 
 jobs:
   build:
@@ -22,6 +23,8 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.0.2'  # Set the desired Flutter version
+          channel: 'stable'
+      - run: flutter build apk
 
       - name: Install dependencies
         run: flutter pub get
