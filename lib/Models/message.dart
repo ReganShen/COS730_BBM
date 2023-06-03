@@ -1,7 +1,7 @@
 class Message {
   final String sender;  
   final String text;
-  final String reciever;
+  final String receiver;
 
-  Message({required this.sender, required this.text, required this.reciever});
+  Message({required this.sender, required this.text, required this.receiver});
 }
